@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="mainpage.js"></script>
+    <script src="storageAPI.js"></script>
+    <link href="styles/main.css" rel="stylesheet">
+    <link href="assets/css/bootstrap.css" rel="stylesheet">
+  </head>
+  <body>
+    <div id="buttons">
+      <button class="btn" id="btnSoftphone">Softphone</button>
+      <button class="btn" id="btnExpertMode">Expert Mode</button>
+    </div>
+    <div id="loading">
+        <img class="loading" src="ajax-loader.gif" />
+    </div>
+
+    <!-- Sandboxed sipML5 pages -->
+    <iframe height="800" width="1200" id="softphoneFrame" class="sandbox active" src="call.htm" style=""></iframe>
+    <iframe height="800" width="1200" id="expertFrame" class="sandbox" src="expert.htm" style=""></iframe>
+
+  </body>
+</html>

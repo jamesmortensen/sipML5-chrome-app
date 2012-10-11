@@ -1,0 +1,304 @@
+﻿<!DOCTYPE html>
+<!--
+* Copyright (C) 2012 Doubango Telecom <http://www.doubango.org>
+* License: GPLv3
+* This file is part of Open Source sipML5 solution <http://www.sipml5.org>
+-->
+<html>
+<!-- head -->
+<head>
+    <meta charset="utf-8" />
+    <title>sipML5 live demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="Keywords" content="doubango, sipML5, VoIP, HTML5, WebRTC, RTCWeb, SIP, IMS, Video chat, VP8, live demo " />
+    <meta name="Description" content="HTML5 SIP client using WebRTC framework" />
+    <meta name="author" content="Doubango Telecom" />
+
+    <!-- SIP API and utility functions -->
+    <script src="src/tinySIP/src/tsip_api.js?svn=10" type="text/javascript"> </script>
+    <!-- Styles -->
+    <link href="./assets/css/bootstrap.css" rel="stylesheet" />
+    <style type="text/css">
+        body{
+            padding-top: 80px;
+            padding-bottom: 40px;
+        }
+        .full-screen{
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .normal-screen{
+            position: relative;
+        }
+        .call-options {
+          padding: 5px;
+          background-color: #f0f0f0;
+          border: 1px solid #eee;
+          border: 1px solid rgba(0, 0, 0, 0.08);
+          -webkit-border-radius: 4px;
+          -moz-border-radius: 4px;
+          border-radius: 4px;
+          -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+          -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+          -webkit-transition-property: opacity;
+          -moz-transition-property: opacity; 
+          -o-transition-property: opacity; 
+          -webkit-transition-duration: 2s;
+          -moz-transition-duration: 2s;
+          -o-transition-duration: 2s;
+        }
+        .tab-video,
+        .div-video{
+            width: 100%; 
+            height: 0px; 
+            -webkit-transition-property: height;
+            -moz-transition-property: height;
+            -o-transition-property: height;
+            -webkit-transition-duration: 2s;
+            -moz-transition-duration: 2s;
+            -o-transition-duration: 2s;
+        }
+        .label-align {
+            display: block;
+            padding-left: 15px;
+            text-indent: -15px;
+        }
+        .input-align {
+            width: 13px;
+            height: 13px;
+            padding: 0;
+            margin:0;
+            vertical-align: bottom;
+            position: relative;
+            top: -1px;
+            *overflow: hidden;
+        }
+
+        
+    </style>
+    <link href="./assets/css/bootstrap-responsive.css" rel="stylesheet" />
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="./assets/ico/favicon.ico" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="./assets/ico/apple-touch-icon-114-precomposed.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="./assets/ico/apple-touch-icon-72-precomposed.png" />
+    <link rel="apple-touch-icon-precomposed" href="./assets/ico/apple-touch-icon-57-precomposed.png" />
+
+    <!-- <script type="text/javascript" src="messagelistener.js"></script> -->
+    <script type="text/javascript" src="storageAPI.js"></script>
+    <script type="text/javascript" src="sipml5-api-util.js"></script>
+
+</head>
+<body style="cursor:wait">
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span
+                    class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                </a>
+                <img alt="sipML5" class="brand" src="./images/sipml-34x39.png" />
+                <div class="nav-collapse">
+                    <ul class="nav">
+                        <li class="active"><a href="index.html?svn=10">Home</a></li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row-fluid">
+            <div class="span4 well">
+                <label style="width: 100%;" align="center" id="txtRegStatus">
+                </label>
+                <h2>
+                    Registration</h2>
+                <br />
+                <table style='width: 100%'>
+                    <tr>
+                        <td>
+                            <label style="height: 100%">
+                                Display Name:</label>
+                        </td>
+                        <td>
+                            <input type="text" style="width: 100%; height: 100%" id="txtDisplayName" value=""
+                                placeholder="e.g. John Doe" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label style="height: 100%">
+                                Private Identity<sup>*</sup>:</label>
+                        </td>
+                        <td>
+                            <input type="text" style="width: 100%; height: 100%" id="txtPrivateIdentity" value=""
+                                placeholder="e.g. +33600000000" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label style="height: 100%">
+                                Public Identity<sup>*</sup>:</label>
+                        </td>
+                        <td>
+                            <input type="text" style="width: 100%; height: 100%" id="txtPublicIdentity" value=""
+                                placeholder="e.g. sip:+33600000000@doubango.org" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label style="height: 100%">Password:</label>
+                        </td>
+                        <td>
+                            <input type="password" style="width: 100%; height: 100%" id="txtPassword" value="" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label style="height: 100%">Realm<sup>*</sup>:</label>
+                        </td>
+                        <td>
+                            <input type="text" style="width: 100%; height: 100%" id="txtRealm" value="" placeholder="e.g. doubango.org" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="right">
+                            <input type="button" class="btn-success" id="btnRegister" value="LogIn" disabled />
+                            &nbsp;
+                            <input type="button" class="btn-danger" id="btnUnRegister" value="LogOut" disabled />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <p class="small"><sup>*</sup> <i>Mandatory Field</i></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <a class="btn" href="http://code.google.com/p/sipml5/wiki/Public_SIP_Servers" target="_blank">Need SIP account?</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <a class="btn" href="./expert.htm" target="_blank">Expert mode?</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="divCallCtrl" class="span7 well" style='display:table-cell; vertical-align:middle'>
+                <label style="width: 100%;" align="center" id="txtCallStatus">
+                </label>
+                <h2>
+                    Call control
+                </h2>
+                <br />
+                <table style='width: 100%;'>
+                    <tr>
+                        <td style="white-space:nowrap;">
+                            <input type="text" style="width: 100%; height:100%" id="txtPhoneNumber" value="" placeholder="Enter phone number to call" />                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="1" align="right">
+                            <input type="button" class="btn-primary" style="" id="btnCall" value="Call" disabled /> &nbsp;
+                            <input type="button" class="btn-primary" style="" id="btnHangUp" value="HangUp" disabled />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="tdVideo" class='tab-video'>
+                            <div id="divVideo" class='div-video'>
+                                <div id="divVideoRemote" style='border:1px solid #000; height:100%; width:100%';>
+                                    <video class="video" width="100%" height="100%" id="video_remote" autoplay="autoplay" style="opacity: 0; 
+                                        background-color: #000000; -webkit-transition-property: opacity; -webkit-transition-duration: 2s;">
+                                    </video>
+                                </div>
+                                <div id="divVideoLocal" style='border:0px solid #000'>
+                                    <video class="video" width="88px" height="72px" id="video_local" autoplay="autoplay" style="opacity: 0;
+                                        margin-top: -80px; margin-left: 5px; background-color: #000000; -webkit-transition-property: opacity;
+                                        -webkit-transition-duration: 2s;">
+                                    </video>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                       <td align='center'>
+                            <div id='divCallOptions' class='call-options' style='opacity: 0; margin-top: 3px'>
+                                <input type="button" class="btn" style="" id="btnFullScreen" value="FullScreen" disabled /> &nbsp;
+                                <input type="button" class="btn" style="" id="btnHoldResume" value="Hold" /> &nbsp;
+                                <input type="button" class="btn" style="" id="btnTransfer" value="Transfer" /> &nbsp;
+                                <!--input type="button" class="btn" style="" id="btnKeyPad" value="KeyPad" onclick='toto();' /-->
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <br />
+        <footer>
+            <p>&copy; Doubango Telecom 2012 <br />
+            <i>Inspiring the future</i>
+            </p>
+            <!-- Creates all ATL/COM objects right now 
+                Will open confirmation dialogs if not already done
+            -->
+            <object id="fakeVideoDisplay" classid="clsid:5C2C407B-09D9-449B-BB83-C39B7802A684" style="visibility:hidden;"> </object>
+            <object id="fakeLooper" classid="clsid:7082C446-54A8-4280-A18D-54143846211A" style="visibility:hidden;"> </object>
+            <object id="fakeSessionDescription" classid="clsid:DBA9F8E2-F9FB-47CF-8797-986A69A1CA9C" style="visibility:hidden;"> </object>
+            <object id="fakeNetTransport" classid="clsid:5A7D84EC-382C-4844-AB3A-9825DBE30DAE" style="visibility:hidden;"> </object>
+            <object id="fakePeerConnection" classid="clsid:56D10AD3-8F52-4AA4-854B-41F4D6F9CEA3" style="visibility:hidden;"> </object>
+            <!-- 
+                NPAPI  browsers: Safari, Opera and Firefox
+            -->
+            <!--embed id="WebRtc4npapi" type="application/w4a" width='1' height='1' style='visibility:hidden;' /-->
+        </footer>
+    </div>
+    <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="./assets/js/jquery.js"></script>
+    <script type="text/javascript" src="./assets/js/bootstrap-transition.js"></script>
+    <script type="text/javascript" src="./assets/js/bootstrap-alert.js"></script>
+    <script type="text/javascript" src="./assets/js/bootstrap-modal.js"></script>
+    <script type="text/javascript" src="./assets/js/bootstrap-dropdown.js"></script>
+    <script type="text/javascript" src="./assets/js/bootstrap-scrollspy.js"></script>
+    <script type="text/javascript" src="./assets/js/bootstrap-tab.js"></script>
+    <script type="text/javascript" src="./assets/js/bootstrap-tooltip.js"></script>
+    <script type="text/javascript" src="./assets/js/bootstrap-popover.js"></script>
+    <script type="text/javascript" src="./assets/js/bootstrap-button.js"></script>
+    <script type="text/javascript" src="./assets/js/bootstrap-collapse.js"></script>
+    <script type="text/javascript" src="./assets/js/bootstrap-carousel.js"></script>
+    <script type="text/javascript" src="./assets/js/bootstrap-typeahead.js"></script>
+
+    <!-- Audios -->
+    <audio id="ringtone" loop src="sounds/ringtone.wav" />
+    <audio id="ringbacktone" loop src="sounds/ringbacktone.wav" />    
+
+    <!-- 
+        Microsoft Internet Explorer extension
+        For now we use msi installer as we don't have trusted certificate yet :(
+    -->
+    <!--object id="webrtc4ieLooper" classid="clsid:7082C446-54A8-4280-A18D-54143846211A" CODEBASE="http://sipml5.org/deploy/webrtc4all.CAB"> </object-->
+
+    <!-- GOOGLE ANALYTICS -->
+    <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+
+    <script type="text/javascript">
+        try {
+            var pageTracker = _gat._getTracker("UA-6868621-19");
+            pageTracker._trackPageview();
+        } catch (err) { }
+    </script>
+
+</body>
+</html>
