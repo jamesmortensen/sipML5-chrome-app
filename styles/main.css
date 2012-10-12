@@ -1,6 +1,8 @@
 html,
 body {
   font-family: Helvetica, Arial, sans-serif;
+  overflow-x:hidden;
+  overflow-y:hidden;
 }
 
 button {
@@ -43,6 +45,7 @@ button:active {
 
 iframe.active {
     display:block;
+    overflow-y:hidden;
 }
 
 iframe {

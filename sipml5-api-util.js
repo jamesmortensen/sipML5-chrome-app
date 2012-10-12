@@ -54,7 +54,11 @@
         if(storageAPI.CHROME_EXTENSION == true) {
             // initialize chrome storage postMessage listeners
             console.info("Registering sandbox delegator..."); 
-            storageAPI.delegator(); 
+            storageAPI.delegator();
+
+            // turn off scrollbars only in the app
+            document.body.style.overflow = "hidden";
+ 
         } else {
             // just use window.localStorage and delegate to the onload handler
             storageAPI.sandbox.window.onload();
