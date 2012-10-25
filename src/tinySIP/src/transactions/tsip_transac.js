@@ -61,18 +61,14 @@ tsip_transac.prototype.deinit = function () {
 }
 
 tsip_transac.prototype.timer_schedule = function (T, N) {
-    console.warn("T = " + T);
-    console.warn("N = " + N);
     this.timer_cancel(N);
     var This = this;
     var s_code = tsk_string_format("This.o_timer{1} = setTimeout(function(){ __tsip_transac_{0}_timer_callback(This, This.o_timer{1})}, This.i_timer{1});", T, N);
-    console.warn("s_code = " + s_code);
     eval(s_code);
 }
 
 tsip_transac.prototype.timer_cancel = function (N) {
     var s_code = tsk_string_format("if(this.o_timer{0}) { clearTimeout(this.o_timer{0}); this.o_timer{0} = null; }", N);
-    console.warn("timer_cancel : s_code = " + s_code);
     eval(s_code);
 }
 

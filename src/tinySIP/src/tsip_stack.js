@@ -324,8 +324,8 @@ function tsip_stack(s_realm, s_impi, s_impu_uri, s_proxy_cscf_host, i_proxy_cscf
 * To get feedbacks about the status (success or error), you must subscribe to @ref on_event_stack.
 * @treturn int 0 if succeed and non-zero value otherwise
 */
-tsip_stack.prototype.start = function () {  
-    console.warn("Inside tsip_stack.start method..."); 
+tsip_stack.prototype.start = function () {
+    
     if (this.e_state == tsip_transport_state_e.STARTED) {
         tsk_utils_log_warn("Already started");
         return 0;

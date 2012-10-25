@@ -88,14 +88,9 @@ tsk_fsm.prototype.act = function (i_action, o_cond_obj1, o_cond_obj2) {
             }
             if (o_entry.fn_execute) {
                 try {
-                    console.warn("arguments = " + arguments);
-                    console.warn("Array prototype = " + Array.prototype.slice.call(arguments, 3));
-                    console.warn("Definition of o_entry.fn_execute = " + o_entry.fn_execute);
                     if ((i_ret_exec = o_entry.fn_execute(Array.prototype.slice.call(arguments, 3)))) {
-                        console.warn("i_ret_exec = " + i_ret_exec);
                         tsk_utils_log_info("State machine: Exec function failed. Moving to the termnial state");
                     }
-                    console.warn("end of try block...");
                 }
                 catch (e) {
                     tsk_utils_log_error(e);
